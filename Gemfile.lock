@@ -1,0 +1,25 @@
+PATH
+  remote: .
+  specs:
+    pwd-password (0.1.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    drb (2.2.3)
+    minitest (6.0.2)
+      drb (~> 2.0)
+      prism (~> 1.5)
+    prism (1.9.0)
+    rake (13.0.6)
+
+PLATFORMS
+  x64-mingw-ucrt
+
+DEPENDENCIES
+  minitest
+  pwd-password!
+  rake
+
+BUNDLED WITH
+   2.4.19
