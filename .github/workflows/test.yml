@@ -14,11 +14,9 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '4.0.1'
-        bundler-cache: true
-    
-    - name: Install dependencies
-      run: bundle install
+        ruby-version: '3.3' 
     
     - name: Run tests
-      run: bundle exec ruby test_password.rb && bundle exec ruby test_storage.rb
+      run: |
+        ruby test/test_password.rb
+        ruby test/test_storage.rb
