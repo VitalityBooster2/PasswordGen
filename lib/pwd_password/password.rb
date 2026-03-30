@@ -13,9 +13,12 @@ module PwdPassword
 
     COMMON_PASSWORDS = %w[
       password
+      123
+      123456789
       123456
       12345678
       111111
+      Aa123456
       qwerty
       admin
       letmein
@@ -36,21 +39,19 @@ module PwdPassword
       length = Integer(length)
       raise ArgumentError, "length must be positive" if length <= 0
 
-      # Lowercase is always enabled (it's the most typical baseline).
+      # Lowercase is always enabled .
       selected_classes = []
       selected_classes << :lowercase
       selected_classes << :digits if numbers
       selected_classes << :symbols if symbols
       selected_classes << :uppercase if uppercase
 
-      # Ensure we can include at least one from every enabled class.
       if length < selected_classes.size
         raise ArgumentError, "length must be >= number of enabled character sets"
       end
 
       alphabet = build_alphabet(selected_classes)
 
-      # Guarantee at least one char from each requested class.
       guaranteed = selected_classes.map { |klass| pick_from_class(klass) }
 
       remaining = length - guaranteed.size
@@ -164,7 +165,6 @@ module PwdPassword
         when :symbols then size += SYMBOLS.size
         end
       end
-      # Avoid log(0) / division by zero
       size = 1 if size <= 0
       size
     end
@@ -198,15 +198,8 @@ module PwdPassword
       log10_tries = length * Math.log10(alphabet_size)
       log10_seconds = log10_tries - Math.log10(attempts_per_second)
 
-      if log10_seconds.is_a?(Numeric) && log10_seconds.finite?
-        # Convert from log10(seconds) to seconds (may overflow to Infinity for huge values).
-        seconds = 10**log10_seconds
-        seconds
-      else
-        nil
-      end
-    rescue StandardError
-      nil
+      seconds = 10**log10_seconds
+      seconds
     end
     private_class_method :estimate_bruteforce_seconds
 
@@ -246,4 +239,3 @@ module PwdPassword
     private_class_method :human_time
   end
 end
-

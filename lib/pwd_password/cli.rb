@@ -12,6 +12,8 @@ module PwdPassword
         run_generate(argv)
       when "check"
         run_check(argv)
+      when "decrypt"
+        run_decrypt(argv)
       when nil
         usage(io: $stdout)
       else
@@ -26,6 +28,7 @@ module PwdPassword
         Usage:
           pwd generate --length 16 --symbols --numbers --uppercase [--store FILE --secret SECRET --cipher aes_gcm|xor]
           pwd check "password"
+          pwd decrypt --file FILE --secret SECRET [--cipher aes_gcm|xor]
 
         Notes:
           In PowerShell, `pwd` is an alias for `Get-Location`.
@@ -114,6 +117,43 @@ module PwdPassword
       puts "rating: #{result[:rating]}"
       puts "crack_time: #{result[:crack_time]}"
       puts "details: #{JSON.generate(result[:details])}"
+    end
+
+    def self.run_decrypt(argv)
+      options = {
+        file: nil,
+        secret: ENV["PWD_SECRET"],
+        cipher: "aes_gcm"
+      }
+
+      parser = OptionParser.new do |opts|
+        opts.banner = "pwd decrypt [options]"
+        opts.on("--file FILE", "Encrypted storage file (e.g. passwords.enc)") { |v| options[:file] = v }
+        opts.on("--secret SECRET", "Secret/passphrase (default: env PWD_SECRET)") { |v| options[:secret] = v }
+        opts.on("--cipher aes_gcm|xor", "Cipher (default: aes_gcm)") { |v| options[:cipher] = v }
+        opts.on("-h", "--help", "Show help") do
+          puts opts
+          exit
+        end
+      end
+
+      parser.parse!(argv)
+
+      if options[:file].to_s.empty?
+        $stderr.puts "Missing --file."
+        exit 1
+      end
+
+      if options[:secret].to_s.empty?
+        $stderr.puts "Missing --secret (or set env PWD_SECRET)."
+        exit 1
+      end
+
+      items = Storage.load_items(path: options[:file], secret: options[:secret], cipher: options[:cipher])
+      puts JSON.pretty_generate(items)
+    rescue ArgumentError => e
+      $stderr.puts e.message
+      exit 1
     end
   end
 end
