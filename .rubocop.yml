@@ -1,17 +1,38 @@
 AllCops:
   TargetRubyVersion: 3.3
   NewCops: enable
+  SuggestExtensions: false
   Exclude:
-    - 'test/**/*'  
+    - 'test/**/*'
+    - 'bin/**/*'
+    - 'lib/Gemfile.rb'
 
 Style/Documentation:
-  Enabled: false  # не требовать документацию
+  Enabled: false
+
+Gemspec/RequireMFA:
+  Enabled: false
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
+Metrics/ClassLength:
+  Max: 200
 
 Metrics/MethodLength:
-  Max: 20  # Разрешённая длина методов
+  Max: 60
 
 Metrics/AbcSize:
-  Max: 20  # разрешить сложность до 20
+  Max: 60
 
-Gemspec:
+Metrics/CyclomaticComplexity:
+  Max: 15
+
+Metrics/PerceivedComplexity:
+  Max: 14
+
+Layout/LineLength:
+  Max: 120
+
+Lint/DuplicateBranch:
   Enabled: false

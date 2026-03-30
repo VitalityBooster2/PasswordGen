@@ -5,9 +5,10 @@ Gem::Specification.new do |spec|
   spec.version = '0.1.0'
   spec.authors = ['Cursor Agent']
   spec.email = ['noreply@example.com']
-
   spec.summary = 'Password generator and strength checker (with CLI and encrypted store)'
-  spec.description = 'Generates passwords with chosen character sets, estimates strength (weak/medium/strong) and approximate brute-force time, and optionally stores generated passwords in an encrypted file.'
+  spec.description = 'Generates passwords with chosen character sets, estimates ' \
+                     'strength (weak/medium/strong) and approximate brute-force time, and optionally ' \
+                     'stores generated passwords in an encrypted file.'
   spec.homepage = 'https://example.com'
   spec.license = 'MIT'
 
