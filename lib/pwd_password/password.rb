@@ -1,10 +1,12 @@
-require "securerandom"
+# frozen_string_literal: true
+
+require 'securerandom'
 
 module PwdPassword
   class Password
-    LOWERCASE = ("a".."z").to_a.freeze
-    UPPERCASE = ("A".."Z").to_a.freeze
-    DIGITS = ("0".."9").to_a.freeze
+    LOWERCASE = ('a'..'z').to_a.freeze
+    UPPERCASE = ('A'..'Z').to_a.freeze
+    DIGITS = ('0'..'9').to_a.freeze
 
     # Reasonable set of ASCII symbols (avoid whitespace, keep URL-unfriendly chars minimal).
     SYMBOLS = %w[
@@ -37,7 +39,7 @@ module PwdPassword
     #
     def self.generate(length:, numbers: false, symbols: false, uppercase: false)
       length = Integer(length)
-      raise ArgumentError, "length must be positive" if length <= 0
+      raise ArgumentError, 'length must be positive' if length <= 0
 
       # Lowercase is always enabled .
       selected_classes = []
@@ -46,9 +48,7 @@ module PwdPassword
       selected_classes << :symbols if symbols
       selected_classes << :uppercase if uppercase
 
-      if length < selected_classes.size
-        raise ArgumentError, "length must be >= number of enabled character sets"
-      end
+      raise ArgumentError, 'length must be >= number of enabled character sets' if length < selected_classes.size
 
       alphabet = build_alphabet(selected_classes)
 
@@ -67,7 +67,7 @@ module PwdPassword
     #
     def self.strength(password)
       pwd = password.to_s
-      return { rating: "weak", crack_time: "unknown" } if pwd.empty?
+      return { rating: 'weak', crack_time: 'unknown' } if pwd.empty?
 
       used_sets = detect_used_sets(pwd)
       variety = used_sets.size
@@ -89,18 +89,12 @@ module PwdPassword
         end
 
       rating =
-        if dictionary_hit
-          "weak"
-        elsif pwd.length < 10
-          "weak"
-        elsif variety < 2
-          "weak"
+        if dictionary_hit || pwd.length < 10 || variety < 2
+          'weak'
         elsif pwd.length >= 14 && variety >= 3 && !likely_patterns
-          "strong"
-        elsif pwd.length >= 12 && variety >= 2 && alphabet_size >= 50
-          "medium"
+          'strong'
         else
-          "medium"
+          'medium'
         end
 
       {
@@ -198,29 +192,28 @@ module PwdPassword
       log10_tries = length * Math.log10(alphabet_size)
       log10_seconds = log10_tries - Math.log10(attempts_per_second)
 
-      seconds = 10**log10_seconds
-      seconds
+      10**log10_seconds
     end
     private_class_method :estimate_bruteforce_seconds
 
     def self.human_time(seconds)
-      return "unknown" if seconds.nil? || !seconds.finite?
+      return 'unknown' if seconds.nil? || !seconds.finite?
+
       s = seconds.to_f
 
       units = [
-        ["секунд", 1.0],
-        ["минут", 60.0],
-        ["часов", 3600.0],
-        ["дней", 86_400.0],
-        ["лет", 31_557_600.0]
+        ['секунд', 1.0],
+        ['минут', 60.0],
+        ['часов', 3600.0],
+        ['дней', 86_400.0],
+        ['лет', 31_557_600.0]
       ]
 
       name = units.first[0]
       factor = units.first[1]
       units.each do |u_name, u_factor|
-        if s < u_factor
-          break
-        end
+        break if s < u_factor
+
         name = u_name
         factor = u_factor
       end

@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-require_relative "../lib/pwd_password"
+require_relative '../lib/pwd_password'
 
 PwdPassword::CLI.run(ARGV)
-
