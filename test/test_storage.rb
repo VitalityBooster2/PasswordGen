@@ -1,3 +1,6 @@
+require 'simplecov'
+SimpleCov.start
+
 require "minitest/autorun"
 require "fileutils"
 require_relative "../lib/pwd_password"
