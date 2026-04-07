@@ -169,7 +169,6 @@ module PwdPassword
       return true if COMMON_PASSWORDS.include?(down)
       return true if down.length <= 12 && COMMON_PASSWORDS.any? { |w| down.start_with?(w) || down.end_with?(w) }
 
-      # Very small heuristic: common substrings within short-ish passwords.
       return false if down.length > 16
 
       COMMON_PASSWORDS.any? do |w|
